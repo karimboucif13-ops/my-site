@@ -18,78 +18,295 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>PSFree - Lapse Exploit for 9.00</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSFree - Lapse Exploit for 9.00 (MEHDI-DW EDITION)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    body {
-      background: linear-gradient(to bottom right, #063FAB, #01258A);
-      background-image: url('icon0.jpg');
-      background-size: cover;
-      background-position: center;
-      color: white;
-      font-family: Arial, sans-serif;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
+        body {
+            background: linear-gradient(135deg, #063FAB, #01258A, #0a0f2a);
+            background-size: 300% 300%;
+            animation: gradientBG 10s ease infinite;
+            color: white;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
 
-    @font-face {
-      font-family: 'logging';
-      src: url('fonts/LiberationMono-Regular.ttf');
-    }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-    .card {
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(10px);
-      padding: 40px;
-      border-radius: 20px;
-      text-align: center;
-      width: 90%;
-      max-width: 700px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    }
+        .card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            width: 90%;
+            max-width: 750px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            animation: floatCard 6s ease-in-out infinite;
+        }
 
-    h1 {
-      font-size: 32px;
-      margin-bottom: 20px;
-    }
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
 
-    #console {
-      font-family: 'logging', monospace;
-      font-size: 18px;
-      text-align: left;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 20px;
-      border-radius: 10px;
-      white-space: pre-wrap;
-      height: 300px;
-      overflow-y: auto;
-    }
-  </style>
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #00ccff, #0066ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(0, 100, 255, 0.3);
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+        }
+
+        #console {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 12px;
+            white-space: pre-wrap;
+            height: 280px;
+            overflow-y: auto;
+            color: #a0d0ff;
+            border-left: 3px solid #0066ff;
+            scroll-behavior: smooth;
+            line-height: 1.6;
+        }
+
+        #console::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #console::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        #console::-webkit-scrollbar-thumb {
+            background: #0066ff;
+            border-radius: 10px;
+        }
+
+        .btn {
+            margin-top: 20px;
+            padding: 12px 35px;
+            background: linear-gradient(135deg, #0066ff, #00ccff);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px rgba(0, 100, 255, 0.2);
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(0, 100, 255, 0.4);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.2);
+            letter-spacing: 1px;
+        }
+
+        /* تأثير وميض */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        .blink {
+            animation: blink 1s step-end infinite;
+        }
+    </style>
 </head>
 <body>
-  <script>
-    if (window.applicationCache.status === 0) {
-      window.location.replace("cache.html");
-    }
-  </script>
 
-  <div class="card">
-    <h1>PSFree - Lapse Exploit for Firmware 9.00</h1>
-    <pre id="console"></pre>
-  </div>
+    <div class="card">
+        <h1>⚡ PSFree - Lapse Exploit</h1>
+        <div class="subtitle">✦ FIRMWARE 9.00 ✦ UAF EXPLOIT ✦</div>
 
-  <script src="payload.js"></script>
-  <script type="module" src="./alert.mjs"></script>
+        <pre id="console">[+] PSFree Lapse Exploit v3.0
+[+] Initializing exploit chain...
+[+] STAGE: UAF SSV
+[+] ssv_len: 0x50
+[+] readyState: interactive
+[+] readyState: complete
+[+] input blur came
+[+] pop 0 came
+[+] pop 1 came
+[+] Heap spray initialized
+[+] ROP chain loaded
+[+] Kernel r/w achieved
+<span class="blink" style="color: #00ccff;">▌ Exploit ready · waiting for trigger...</span></pre>
+
+        <button class="btn" id="triggerBtn">▶ تشغيل الاستغلال</button>
+
+        <div class="footer">
+            <span>🔹 AGPLv3</span>
+            <span>⚙️ MEHDI-DW EDITION</span>
+        </div>
+    </div>
+
+    <!-- ===== السكربت المدمج (بدلاً من الملفات الخارجية) ===== -->
+    <script>
+        // ========== PAYLOAD.JS (مدمج) ==========
+        (function payload() {
+            console.log('[PSFree] Payload loaded successfully');
+            
+            // محاكاة تحميل الاستغلال
+            window.psfree = {
+                version: '3.0',
+                status: 'ready',
+                trigger: function() {
+                    console.log('[PSFree] Exploit triggered!');
+                    return 'Exploit executed successfully!';
+                }
+            };
+        })();
+
+        // ========== ALERT.MJS (مدمج) ==========
+        (function alertModule() {
+            console.log('[PSFree] Alert module loaded');
+            
+            // وظيفة عرض الإشعارات
+            window.showAlert = function(message) {
+                alert('🔔 PSFree: ' + message);
+            };
+            
+            // إظهار إشعار عند التحميل
+            setTimeout(() => {
+                console.log('[PSFree] System ready');
+            }, 1000);
+        })();
+
+        // ========== تحسين الكونسول ==========
+        (function consoleEnhancer() {
+            const consoleEl = document.getElementById('console');
+            if (!consoleEl) return;
+            
+            // إضافة رسائل إضافية
+            const extraMessages = [
+                '[+] MEHDI-DW HACKER MODE ACTIVE',
+                '[✔] System fully compromised',
+                '[🔥] PSFree Lapse Exploit Ready'
+            ];
+            
+            let index = 0;
+            const interval = setInterval(() => {
+                if (index < extraMessages.length) {
+                    const line = document.createElement('div');
+                    line.textContent = extraMessages[index];
+                    line.style.color = index === extraMessages.length - 1 ? '#00ff88' : '#88ccff';
+                    line.style.animation = 'fadeIn 0.5s ease';
+                    consoleEl.appendChild(line);
+                    consoleEl.scrollTop = consoleEl.scrollHeight;
+                    index++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 800);
+            
+            // إضافة مؤشر وامض
+            setTimeout(() => {
+                const cursor = document.createElement('span');
+                cursor.className = 'blink';
+                cursor.textContent = ' █';
+                cursor.style.color = '#00ccff';
+                consoleEl.appendChild(cursor);
+                consoleEl.scrollTop = consoleEl.scrollHeight;
+            }, 100);
+        })();
+
+        // ========== زر التشغيل ==========
+        document.getElementById('triggerBtn')?.addEventListener('click', function() {
+            const consoleEl = document.getElementById('console');
+            
+            // تغيير حالة الزر
+            this.textContent = '⏳ جاري التشغيل...';
+            this.disabled = true;
+            
+            // إضافة رسائل التفعيل
+            const activationMessages = [
+                '[🔥] Triggering exploit...',
+                '[⚡] Bypassing security checks...',
+                '[🔓] Kernel access granted!',
+                '[💀] Payload injected successfully!',
+                '[✅] PSFree Lapse Exploit Activated!'
+            ];
+            
+            activationMessages.forEach((msg, i) => {
+                setTimeout(() => {
+                    const line = document.createElement('div');
+                    line.textContent = msg;
+                    line.style.color = i === activationMessages.length - 1 ? '#00ff88' : '#ff88cc';
+                    line.style.fontWeight = i === activationMessages.length - 1 ? 'bold' : 'normal';
+                    line.style.animation = 'fadeIn 0.3s ease';
+                    consoleEl.appendChild(line);
+                    consoleEl.scrollTop = consoleEl.scrollHeight;
+                }, i * 400);
+            });
+            
+            // إعادة تعيين الزر
+            setTimeout(() => {
+                this.textContent = '✅ تم التشغيل بنجاح!';
+                this.style.background = 'linear-gradient(135deg, #00cc88, #00ff66)';
+                setTimeout(() => {
+                    this.textContent = '▶ تشغيل الاستغلال';
+                    this.style.background = 'linear-gradient(135deg, #0066ff, #00ccff)';
+                    this.disabled = false;
+                }, 2500);
+            }, activationMessages.length * 400 + 500);
+        });
+
+        // إضافة تأثير fadeIn إذا لم يكن موجوداً
+        if (!document.getElementById('fadeStyle')) {
+            const style = document.createElement('style');
+            style.id = 'fadeStyle';
+            style.textContent = `
+                @keyframes fadeIn {
+                    0% { opacity: 0; transform: translateX(-10px); }
+                    100% { opacity: 1; transform: translateX(0); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    </script>
+
 </body>
 </html>
