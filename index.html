@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>هوست PS4 - 9.00</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="icon0.png">
+<style>
+  body{font-family:Tahoma,Arial,sans-serif;background:#111;color:#eee;text-align:center;margin:0;padding:2rem;}
+  h1{margin-bottom:1rem;font-size:1.6rem;}
+  .btns{display:grid;gap:1rem;max-width:320px;margin:0 auto;}
+  button{padding:1rem 1.25rem;font-size:1.1rem;border:none;border-radius:8px;cursor:pointer;background:#ffb400;color:#000;font-weight:bold;}
+  button:disabled{opacity:.4;cursor:not-allowed;}
+  #log{margin-top:2rem;text-align:left;max-width:600px;margin-inline:auto;padding:1rem;background:#222;border:1px solid #333;max-height:200px;overflow-y:auto;font-size:.9rem;direction:ltr;}
+</style>
+</head>
+<body>
+<h1>هوست PS4 - 9.00</h1>
+<div class="btns">
+  <button id="btnExploit">تشغيل الاستغلال</button>
+  <button id="btnPayload" disabled>إرسال البيلود</button>
+  <button id="btnCache">تثبيت الصفحة أوفلاين</button>
+  <button id="btnAbout">معلومات</button>
+</div>
+<pre id="log"></pre>
+
+<script type="module">
+const logBox = document.getElementById('log');
+const log = (...msg)=>{logBox.textContent += msg.join(' ')+'\n';logBox.scrollTop=logBox.scrollHeight;};
+
+let psfreeMod, payloadMod, lapseMod, alertMod, configMod, sendMod;
+async function loadModules(){
+  try{
+    [configMod, psfreeMod, payloadMod, lapseMod, alertMod, sendMod] = await Promise.all([
+      import('./config.mjs').catch(()=>({})),
+      import('./psfree.mjs').catch(()=>({})),
+      import('./payload.js').catch(()=>({})),
+      import('./lapse.mjs').catch(()=>({})),
+      import('./alert.mjs').catch(()=>({})),
+      import('./send.mjs').catch(()=>({}))
+    ]);
+    log('تم تحميل الوحدات بنجاح');
+  }catch(e){ log('خطأ تحميل الوحدات:', e); }
+}
+loadModules();
+
+async function runExploit(){
+  log('تشغيل الاستغلال...');
+  try{
+    if(psfreeMod && typeof psfreeMod.default === 'function'){
+      await psfreeMod.default();
+    } else if(psfreeMod && psfreeMod.run){
+      await psfreeMod.run();
+    } else {
+      log('⚠️ psfree.mjs لا يحتوي على دالة تشغيل واضحة');
+    }
+    log('انتهى تشغيل الاستغلال');
+    document.getElementById('btnPayload').disabled = false;
+  }catch(e){ log('خطأ في الاستغلال:', e); }
+}
+
+async function sendPayload(){
+  log('إرسال payload.bin...');
+  try{
+    const resp = await fetch('./payload.bin');
+    const buf = await resp.arrayBuffer();
+    const u8 = new Uint8Array(buf);
+    log('حجم البيلود:', u8.length, 'بايت');
+    if(sendMod?.send){
+      await sendMod.send(u8);
+      log('تم الإرسال عبر send.mjs');
+    }else{
+      log('تم تحميل البيلود، لم يتم العثور على sendMod');
+    }
+  }catch(e){ log('خطأ في إرسال البيلود:', e); }
+}
+
+async function cachePage(){
+  log('تثبيت الصفحة أوفلاين...');
+  try{
+    if(lapseMod?.cacheAll){
+      await lapseMod.cacheAll();
+      log('تم التثبيت عبر lapseMod');
+    } else {
+      const files = ['config.mjs','psfree.mjs','payload.js','lapse.mjs','alert.mjs','send.mjs','payload.bin','about.html','cache.html','icon0.png'];
+      await Promise.all(files.map(f=>fetch(f).then(()=>log('تم التخزين:',f)).catch(()=>log('لم يتم:',f))));
+      log('انتهى التخزين المؤقت');
+    }
+  }catch(e){ log('خطأ في التخزين:', e); }
+}
+
+document.getElementById('btnExploit').addEventListener('click', runExploit);
+document.getElementById('btnPayload').addEventListener('click', sendPayload);
+document.getElementById('btnCache').addEventListener('click', cachePage);
+document.getElementById('btnAbout').addEventListener('click', ()=>{location.href='about.html';});
+</script>
+</body>
+</html>
